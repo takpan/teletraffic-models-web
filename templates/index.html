@@ -1,0 +1,146 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- Window title-->
+        <title>PGW operations</title>
+        <!-- Include Bootstrap CSS -->
+        <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+        <!-- Include JQuery library from MaxCDN-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <!-- Include Bootstrap JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script type=text/javascript>
+			$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+		</script>
+    </head>
+    <style>
+        .container{
+            min-width: 1200px;
+            max-width: 1600px;
+        }
+    </style>
+
+	<body>
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <h1 class="display-4">Teletraffic models</h1>
+    <p class="lead">Calculations for several teletraffic models</p>
+  </div>
+</div>
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-4">
+					<form class="border" style="padding-left: 15px; padding-right: 15px; padding-bottom: 15px" method="post" action="http://localhost:5000/">
+						<div class="form-group">
+							<h4 class="padding-bottom-xl">Input data</h4>
+						</div>
+						<div class="form-group">
+							<label for="teletrafficModelId">Model:</label>
+							<select class="form-control" name="teletrafficModel" id="teletrafficModelId">
+								<option value="emlm">EMLM</option>
+								<option value="enmlm">EnMLM</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="teletrafficModelId">Calculate:</label>
+							<div class="radio">
+								<label class="radio-inline" style="margin-right: 20px"><input type="radio" name="optradio" style="margin-right: 10px" checked>Blocking probabilities</label>
+								<label class="radio-inline"><input type="radio" name="optradio" style="margin-right: 10px">Link capacity</label>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="linkCapacityId">Link Capacity:</label>
+							<input type="text" class="form-control" name="linkCapacity" id="linkCapacityId" placeholder="Bandwidth units">
+						</div>
+						<div class="form-group">
+							<label for="numOfServiceClassesId">Number of service classes:</label>
+							<input type="number" name="numOfServiceClasses" id="numOfServiceClassesId" value="1" min="1" max="100">
+						</div>
+						<div class="checkbox">
+  							<label><input type="checkbox" name="trunkReservation" id="trunkReservationId" style="margin-right: 10px" value="Checked">Trunk Reservation</label>
+						</div>
+						<hr>
+						<div class="card" style="margin-bottom: 20px">
+							<div class="card-header">
+								Service class 1
+							</div>
+							<div class="card-body">
+								<div class="form-row">
+									<div class="col">
+										<label for="trafficLoad1Id">Traffic load:</label>
+										<input type="text" name="trafficLoad1" class="form-control" id="trafficLoad1Id" placeholder="Erlangs">
+									</div>
+									<div class="col">
+										<label for="bwDemand1Id">Bandwidth demand:</label>
+										<input type="text" name="bwDemand1" class="form-control" id="bwDemand1Id" placeholder="Bandwidth units">
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="card">
+							<div class="card-header">
+								Service class 2
+							</div>
+							<div class="card-body">
+								<div class="form-row">
+									<div class="col">
+										<label for="trafficLoad2Id">Traffic load:</label>
+										<input type="text" name="trafficLoad2" class="form-control" id="trafficLoad2Id" placeholder="Erlangs">
+									</div>
+									<div class="col">
+										<label for="bwDemand2Id">Bandwidth demand:</label>
+										<input type="text" name="bwDemand2" class="form-control" id="bwDemand2Id" placeholder="Bandwidth units">
+									</div>
+								</div>
+							</div>
+						</div>
+						<button type="submit" class="btn btn-primary">Submit</button>
+					</form>
+				</div>
+				<div class="col-lg-8 border">
+					<h4 class="padding-bottom-xl">Results</h4>
+					<div id="qjId">
+					</div>
+					<br>
+					<div id="qjnormId">
+					</div>
+					<br>
+					<div id="congProbId">
+					</div>
+					<br>
+					<div id="ykjId">
+					</div>
+					<br>
+					<div id="uId">
+					</div>
+				</div>
+			</div>
+		</div>
+   </body>
+	<script src="static/bootstrap-input-spinner.js"></script>
+	<script>
+	    $("input[type='number']").inputSpinner()
+	</script>
+	<script>
+		$(document).ready(function() {
+			$("form").on('submit', function(event){
+			
+				$.ajax({
+					url: '/process',
+					data: $('form').serialize(),
+					type: 'POST'
+				})
+				.done(function(data) {
+					$('#qjId').text('qj: ' + data.qj).show();
+					$('#qjnormId').text('qj normalized: ' + data.qj_norm).show();
+					$('#congProbId').text('Congestion probabilities: ' + data.congProb).show();
+					$('#ykjId').text('ykj: ' + data.ykj).show();
+					$('#uId').text('Link utilization: ' + data.u).show();
+				});
+
+				event.preventDefault();
+			});
+		});
+	</script>
+</html>
