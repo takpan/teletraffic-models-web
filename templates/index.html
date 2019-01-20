@@ -114,6 +114,8 @@
 					<br>
 					<div id="uId">
 					</div>
+					<div id="myName">
+					</div>
 				</div>
 			</div>
 		</div>
@@ -132,12 +134,15 @@
 					type: 'POST'
 				})
 				.done(function(data) {
-					$('#qjId').text('qj: ' + data.qj).show();
-					$('#qjnormId').text('qj normalized: ' + data.qj_norm).show();
-					$('#congProbId').text('Congestion probabilities: ' + data.congProb).show();
-					$('#ykjId').text('ykj: ' + data.ykj).show();
-					$('#uId').text('Link utilization: ' + data.u).show();
+					//$('#qjId').text('qj: ' + data.qj).show();
+					//$('#qjnormId').text('qj normalized: ' + data.qj_norm).show();
+					//$('#congProbId').text('Congestion probabilities: ' + data.congProb).show();
+					//$('#ykjId').text('ykj: ' + data.ykj).show();
+					//$('#uId').text('Link utilization: ' + data.u).show();
+					//$('#myName').load('./result.html');
+					$('#myName').append(data);
 				});
+				
 
 				event.preventDefault();
 			});

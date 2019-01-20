@@ -26,7 +26,9 @@ def process():
     ykj = emlmObj.get_ykj()
     U = emlmObj.get_u()
     
-    result = {'qj': qj, 'qj_norm': qj_norm, 'congProb': congProb, 'ykj': ykj, 'u': U}
+    #result = {'qj': qj, 'qj_norm': qj_norm, 'congProb': congProb, 'ykj': ykj, 'u': U}
+    #print result
+    result = render_template('result.html')
     print result
 
 
