@@ -1,3 +1,67 @@
-<div>
-	Takis Panagoulias
-</div>
+<br>
+<table class="table table-bordered">
+	<thead>
+	    <tr>
+			<th scope="col">service class</th>
+			<th scope="col">Blocking Probability</th>
+	    </tr>
+	</thead>
+	<tbody>
+  		{% for value in results['congProb'] %}
+			<tr>
+			  <th scope="row">{{ loop.index0 + 1}}</th>
+			  <td>{{ value }}</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+<br>
+<table class="table table-bordered">
+	<tbody>
+		<tr>
+		  <th scope="row">Link Utilization</th>
+		  <td>{{ results['u'] }}</td>
+		</tr>
+	</tbody>
+</table>
+<br>
+<table class="table table-bordered">
+	<thead>
+	    <tr>
+			<th scope="col">j</th>
+			<th scope="col">qj</th>
+			<th scope="col">qj norm</th>
+	    </tr>
+	</thead>
+	<tbody>
+  		{% for value in results['qj'] %}
+			<tr>
+			  <th scope="row">{{ loop.index0 }}</th>
+			  <td>{{ value }}</td>
+			  <td>{{ results['qj_norm'][loop.index0] }}</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+<br>
+<table class="table table-bordered">
+	<thead>
+	    <tr>
+			<th scope="col">j</th>
+			{% for value in results['ykj'] %}
+				<td>y{{ loop.index0 + 1}}j</td>
+			{% endfor %}
+	    </tr>
+	</thead>
+	<tbody>
+  		{% for value in results['ykj'][0] %}
+  			{% set outer_loop = loop %}
+			<tr>
+			  <th scope="row">{{ outer_loop.index0 }}</th>
+			  {% for value2 in results['ykj'] %}
+				<td>{{ results['ykj'][loop.index0][outer_loop.index0] }}</td>
+			  {% endfor %}
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>

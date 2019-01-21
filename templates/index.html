@@ -24,8 +24,8 @@
 	<body>
 <div class="jumbotron jumbotron-fluid">
   <div class="container">
-    <h1 class="display-4">Teletraffic models</h1>
-    <p class="lead">Calculations for several teletraffic models</p>
+    <h1 class="display-4">Multirate Teletraffic Loss Models</h1>
+    <p class="lead">Calculations for several teletraffic loss models</p>
   </div>
 </div>
 		<div class="container">
@@ -46,7 +46,7 @@
 							<label for="teletrafficModelId">Calculate:</label>
 							<div class="radio">
 								<label class="radio-inline" style="margin-right: 20px"><input type="radio" name="optradio" style="margin-right: 10px" checked>Blocking probabilities</label>
-								<label class="radio-inline"><input type="radio" name="optradio" style="margin-right: 10px">Link capacity</label>
+								<label class="radio-inline"><input type="radio" name="optradio" style="margin-right: 10px" disabled>Link capacity</label>
 							</div>
 						</div>
 						<div class="form-group">
@@ -55,66 +55,56 @@
 						</div>
 						<div class="form-group">
 							<label for="numOfServiceClassesId">Number of service classes:</label>
-							<input type="number" name="numOfServiceClasses" id="numOfServiceClassesId" value="1" min="1" max="100">
+							<input type="number" name="numOfServiceClasses" id="numOfServiceClassesId" value="1" min="2" max="6">
+							<small id="numOfServiceClassesHelp" class="form-text text-muted">Max value = 6</small>
 						</div>
 						<div class="checkbox">
-  							<label><input type="checkbox" name="trunkReservation" id="trunkReservationId" style="margin-right: 10px" value="Checked">Trunk Reservation</label>
+  							<label><input type="checkbox" name="bwReservation" id="bwReservationId" style="margin-right: 10px" value="Checked" disabled>Bandwidth Reservation</label>
 						</div>
 						<hr>
-						<div class="card" style="margin-bottom: 20px">
-							<div class="card-header">
-								Service class 1
-							</div>
-							<div class="card-body">
-								<div class="form-row">
-									<div class="col">
-										<label for="trafficLoad1Id">Traffic load:</label>
-										<input type="text" name="trafficLoad1" class="form-control" id="trafficLoad1Id" placeholder="Erlangs">
+						<div class="form-group" id="cards">
+							<div class="card" id="servClass1" style="margin-bottom: 20px">
+								<div class="card-header">
+									Service class 1
+								</div>
+								<div class="card-body">
+									<div class="form-row">
+										<div class="col">
+											<label for="trafficLoad1Id">Traffic load:</label>
+											<input type="text" name="trafficLoad1" class="form-control" id="trafficLoad1Id" placeholder="Erlangs">
+										</div>
+										<div class="col">
+											<label for="bwDemand1Id">Bandwidth demand:</label>
+											<input type="text" name="bwDemand1" class="form-control" id="bwDemand1Id" placeholder="Bandwidth units">
+										</div>
 									</div>
-									<div class="col">
-										<label for="bwDemand1Id">Bandwidth demand:</label>
-										<input type="text" name="bwDemand1" class="form-control" id="bwDemand1Id" placeholder="Bandwidth units">
+								</div>
+							</div>
+							<div class="card" id="servClass2">
+								<div class="card-header">
+									Service class 2
+								</div>
+								<div class="card-body">
+									<div class="form-row">
+										<div class="col">
+											<label for="trafficLoad2Id">Traffic load:</label>
+											<input type="text" name="trafficLoad2" class="form-control" id="trafficLoad2Id" placeholder="Erlangs">
+										</div>
+										<div class="col">
+											<label for="bwDemand2Id">Bandwidth demand:</label>
+											<input type="text" name="bwDemand2" class="form-control" id="bwDemand2Id" placeholder="Bandwidth units">
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div class="card">
-							<div class="card-header">
-								Service class 2
-							</div>
-							<div class="card-body">
-								<div class="form-row">
-									<div class="col">
-										<label for="trafficLoad2Id">Traffic load:</label>
-										<input type="text" name="trafficLoad2" class="form-control" id="trafficLoad2Id" placeholder="Erlangs">
-									</div>
-									<div class="col">
-										<label for="bwDemand2Id">Bandwidth demand:</label>
-										<input type="text" name="bwDemand2" class="form-control" id="bwDemand2Id" placeholder="Bandwidth units">
-									</div>
-								</div>
-							</div>
-						</div>
+						<br>
 						<button type="submit" class="btn btn-primary">Submit</button>
 					</form>
 				</div>
 				<div class="col-lg-8 border">
 					<h4 class="padding-bottom-xl">Results</h4>
-					<div id="qjId">
-					</div>
-					<br>
-					<div id="qjnormId">
-					</div>
-					<br>
-					<div id="congProbId">
-					</div>
-					<br>
-					<div id="ykjId">
-					</div>
-					<br>
-					<div id="uId">
-					</div>
-					<div id="myName">
+					<div id="results">
 					</div>
 				</div>
 			</div>
@@ -140,12 +130,32 @@
 					//$('#ykjId').text('ykj: ' + data.ykj).show();
 					//$('#uId').text('Link utilization: ' + data.u).show();
 					//$('#myName').load('./result.html');
-					$('#myName').append(data);
+					$("#results").empty();
+					$('#results').append(data);
 				});
-				
-
 				event.preventDefault();
 			});
+			
+			$("#numOfServiceClassesId").on('input',function(e){
+				var curVal = $("#numOfServiceClassesId").val();
+				var curCards = $("#cards > div").length;
+				//alert(curVal)
+				
+				var diff = curVal - curCards
+				
+				if (diff == 1) {
+					$.post('/card', {servClass: curVal}, 
+					    function(data){
+						$("#cards").append(data);
+					});
+				}
+				else if  (diff == -1){
+					$( "#servClass" + curCards).remove();
+    			
+    			}
+
+			});
+			
 		});
 	</script>
 </html>

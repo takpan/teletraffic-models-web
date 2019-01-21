@@ -6,17 +6,24 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-@app.route('/process', methods=['POST'])
+@app.route('/card', methods=['POST'])
+def card():
+    return render_template('cardDiv.html', servClass = request.form['servClass'])
+
+@app.route('/process', methods=['post'])
 def process():
     result = request.form
     c = int(result['linkCapacity'])
     k = int(result['numOfServiceClasses'])
-    a1 = int(result['trafficLoad1'])
-    b1 = int(result['bwDemand1'])
-    a2 = int(result['trafficLoad2'])
-    b2 = int(result['bwDemand2'])
-    a_list = [a1, a2]
-    b_list = [b1, b2]
+    a_list = []
+    b_list = []
+    for i in range(k):
+        akey = 'trafficLoad' + str(i + 1)
+        print akey 
+        a_list.append(int(result[akey]))
+        print a_list
+        bkey = 'bwDemand' + str(i + 1) 
+        b_list.append(int(result[bkey]))
 
     emlmObj = EMLM(c, k , b_list, a_list)
     
@@ -26,11 +33,13 @@ def process():
     ykj = emlmObj.get_ykj()
     U = emlmObj.get_u()
     
+    print congProb
+    
+    results_dict = {'qj': qj, 'qj_norm': qj_norm, 'congProb': congProb, 'ykj': ykj, 'u': U}
+    
     #result = {'qj': qj, 'qj_norm': qj_norm, 'congProb': congProb, 'ykj': ykj, 'u': U}
     #print result
-    result = render_template('result.html')
-    print result
-
+    result = render_template('result.html', results = results_dict)
 
     return jsonify(result)
 #     if request.method == 'POST':
