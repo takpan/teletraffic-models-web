@@ -3,14 +3,22 @@
 		Service class {{ servClass }}
 	</div>
 	<div class="card-body">
-		<div class="form-row">
-			<div class="col">
-				<label for="trafficLoad{{ servClass }}Id">Traffic load:</label>
+		<div class="form-group row">
+			<label for="trafficLoad{{ servClass }}Id" class="col-sm-5 col-form-label">Traffic load (<i>a</i>):</label>
+			<div class="col-sm-7">
 				<input type="text" name="trafficLoad{{ servClass }}" class="form-control" id="trafficLoad{{ servClass }}Id" placeholder="Erlangs">
 			</div>
-			<div class="col">
-				<label for="bwDemand{{ servClass }}Id">Bandwidth demand:</label>
+		</div>
+		<div class="form-group row">
+			<label for="bwDemand{{ servClass }}Id" class="col-sm-5 col-form-label">Bandwidth demand (<i>b</i>):</label>
+			<div class="col-sm-7">
 				<input type="text" name="bwDemand{{ servClass }}" class="form-control" id="bwDemand{{ servClass }}Id" placeholder="Bandwidth units">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label for="bwDemand{{ servClass }}Id" class="col-sm-5 col-form-label">Reserved bandwidth (<i>t</i>):</label>
+			<div class="col-sm-7">
+				<input type="text" name="reservedBw{{ servClass }}" class="form-control br" id="reservedBw{{ servClass }}Id" placeholder="Bandwidth units">
 			</div>
 		</div>
 	</div>

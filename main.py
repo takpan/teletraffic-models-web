@@ -17,23 +17,27 @@ def process():
     k = int(result['numOfServiceClasses'])
     a_list = []
     b_list = []
+    t_list = []
     for i in range(k):
         akey = 'trafficLoad' + str(i + 1)
-        print akey 
         a_list.append(int(result[akey]))
-        print a_list
         bkey = 'bwDemand' + str(i + 1) 
         b_list.append(int(result[bkey]))
 
-    emlmObj = EMLM(c, k , b_list, a_list)
+    if request.form.get("bwReservation") is not None:
+        for i in range(k):
+            tkey = 'reservedBw' + str(i + 1)
+            t_list.append(int(result[tkey]))
+    else:
+        t_list = None
+
+    emlmObj = EMLM(c, k , b_list, a_list, t_list)
     
     qj = emlmObj.get_q()
     qj_norm = emlmObj.get_qNorm()
     congProb = emlmObj.get_pbk()
     ykj = emlmObj.get_ykj()
     U = emlmObj.get_u()
-    
-    print congProb
     
     results_dict = {'qj': qj, 'qj_norm': qj_norm, 'congProb': congProb, 'ykj': ykj, 'u': U}
     

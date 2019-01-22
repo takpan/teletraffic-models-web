@@ -30,7 +30,7 @@
 </div>
 		<div class="container">
 			<div class="row">
-				<div class="col-lg-4">
+				<div class="col-lg-5">
 					<form class="border" style="padding-left: 15px; padding-right: 15px; padding-bottom: 15px" method="post" action="http://localhost:5000/">
 						<div class="form-group">
 							<h4 class="padding-bottom-xl">Input data</h4>
@@ -59,7 +59,7 @@
 							<small id="numOfServiceClassesHelp" class="form-text text-muted">Max value = 6</small>
 						</div>
 						<div class="checkbox">
-  							<label><input type="checkbox" name="bwReservation" id="bwReservationId" style="margin-right: 10px" value="Checked" disabled>Bandwidth Reservation</label>
+  							<label><input type="checkbox" name="bwReservation" id="bwReservationId" style="margin-right: 10px" value="checked">Bandwidth Reservation</label>
 						</div>
 						<hr>
 						<div class="form-group" id="cards">
@@ -68,31 +68,47 @@
 									Service class 1
 								</div>
 								<div class="card-body">
-									<div class="form-row">
-										<div class="col">
-											<label for="trafficLoad1Id">Traffic load:</label>
+									<div class="form-group row">
+										<label for="trafficLoad1Id" class="col-sm-5 col-form-label">Traffic load (<i>a</i>):</label>
+										<div class="col-sm-7">
 											<input type="text" name="trafficLoad1" class="form-control" id="trafficLoad1Id" placeholder="Erlangs">
 										</div>
-										<div class="col">
-											<label for="bwDemand1Id">Bandwidth demand:</label>
+									</div>
+									<div class="form-group row">
+										<label for="bwDemand1Id" class="col-sm-5 col-form-label">Bandwidth demand (<i>b</i>):</label>
+										<div class="col-sm-7">
 											<input type="text" name="bwDemand1" class="form-control" id="bwDemand1Id" placeholder="Bandwidth units">
+										</div>
+									</div>
+									<div class="form-group row">
+										<label for="reservedBw1Id" class="col-sm-5 col-form-label">Reserved bandwidth (<i>t</i>):</label>
+										<div class="col-sm-7">
+											<input type="text" name="reservedBw1" class="form-control br" id="reservedBw1Id" placeholder="Bandwidth units">
 										</div>
 									</div>
 								</div>
 							</div>
-							<div class="card" id="servClass2">
+							<div class="card" id="servClass1" style="margin-bottom: 20px">
 								<div class="card-header">
 									Service class 2
 								</div>
 								<div class="card-body">
-									<div class="form-row">
-										<div class="col">
-											<label for="trafficLoad2Id">Traffic load:</label>
+									<div class="form-group row">
+										<label for="trafficLoad1Id" class="col-sm-5 col-form-label">Traffic load (<i>a</i>):</label>
+										<div class="col-sm-7">
 											<input type="text" name="trafficLoad2" class="form-control" id="trafficLoad2Id" placeholder="Erlangs">
 										</div>
-										<div class="col">
-											<label for="bwDemand2Id">Bandwidth demand:</label>
+									</div>
+									<div class="form-group row">
+										<label for="bwDemand1Id" class="col-sm-5 col-form-label">Bandwidth demand (<i>b</i>):</label>
+										<div class="col-sm-7">
 											<input type="text" name="bwDemand2" class="form-control" id="bwDemand2Id" placeholder="Bandwidth units">
+										</div>
+									</div>
+									<div class="form-group row">
+										<label for="reservedBw2Id" class="col-sm-5 col-form-label">Reserved bandwidth (<i>t</i>):</label>
+										<div class="col-sm-7">
+											<input type="text" name="reservedBw2" class="form-control br" id="reservedBw2Id" placeholder="Bandwidth units">
 										</div>
 									</div>
 								</div>
@@ -102,7 +118,7 @@
 						<button type="submit" class="btn btn-primary">Submit</button>
 					</form>
 				</div>
-				<div class="col-lg-8 border">
+				<div class="col-lg-7 border">
 					<h4 class="padding-bottom-xl">Results</h4>
 					<div id="results">
 					</div>
@@ -155,7 +171,20 @@
     			}
 
 			});
-			
+
+			if ($("#bwReservationId").is(':checked')) {
+			  $(".br").prop("disabled", false);
+			} else {
+			  $(".br").prop("disabled", true);
+			}
+
+			$("#bwReservationId" ).on( "click", function() {
+				if ($("#bwReservationId").is(':checked')) {
+				  $(".br").prop("disabled", false);
+				} else {
+				  $(".br").prop("disabled", true);
+				}
+			});
 		});
 	</script>
 </html>
