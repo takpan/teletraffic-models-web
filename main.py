@@ -14,7 +14,7 @@ def card():
     if model == 'emlm':
         return render_template('serv_class_card_emlm.html', servClass = serviceClass)
     elif model == 'enmlm':
-        return render_template('serv_class_card_enlm.html', servClass = serviceClass)
+        return render_template('serv_class_card_enmlm.html', servClass = serviceClass)
 
 @app.route('/getInput', methods=['POST'])
 def getInput():
