@@ -37,7 +37,7 @@
             </div>
             <div class="form-group">
               <label for="teletrafficModelId">Model:</label>
-              <select class="form-control" name="teletraffic-model" id="teletrafficModelId">
+              <select class="form-control" name="teletrafficModel" id="teletrafficModelId">
                 <option value="emlm">EMLM</option>
                 <option value="enmlm">EnMLM</option>
               </select>
@@ -60,7 +60,7 @@
   <script>
     function setInputLayout() {
       selectedModel = $("#teletrafficModelId").val();
-      $.post('/getInput', {trafficModel: selectedModel}, 
+      $.post('/getInput', {model: selectedModel}, 
         function(data){
         $("#inputData").empty();
         $('#inputData').append(data);
@@ -85,25 +85,30 @@
         event.preventDefault();
       });
 
-      $("#teletrafficModelId").on('change', function(){
+      $("#teletrafficModelId").on('change',function(){
         setInputLayout()
       });
 
-      $("#numOfServiceClassesId").on('input',function(e){
+      $(document).on('input','#numOfServiceClassesId', function(e){
+        var curModel = $("#teletrafficModelId").val();
         var curVal = $("#numOfServiceClassesId").val();
         var curCards = $("#cards > div").length;
-        alert(curVal)
         
         var diff = curVal - curCards
         
         if (diff == 1) {
-          $.post('/card', {servClass: curVal}, 
-              function(data){
-            $("#cards").append(data);
+          $.post('/card', {servClass: curVal, model: curModel}, 
+            function(data){
+              $("#cards").append(data);
+              if ($("#bwReservationId").is(':checked')) {
+                $(".br").prop("disabled", false);
+              } else {
+                $(".br").prop("disabled", true);
+              } 
           });
         }
         else if  (diff == -1){
-          $( "#serv-class" + curCards).remove();
+          $( "#servClass" + curCards).remove();
         }
 
       });
@@ -114,8 +119,8 @@
         $(".br").prop("disabled", true);
       }
 
-      $("#bwReservationId").on("click", function() {
-        if ($("#bw-reservation-id").is(':checked')) {
+      $(document).on("click", "#bwReservationId", function() {
+        if ($("#bwReservationId").is(':checked')) {
           $(".br").prop("disabled", false);
         } else {
           $(".br").prop("disabled", true);

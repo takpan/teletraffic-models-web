@@ -1,5 +1,6 @@
 from flask import Flask, render_template, jsonify, request
 from EMLM import EMLM
+from EnMLM import EnMLM
 app = Flask(__name__)
 
 @app.route('/')
@@ -8,12 +9,16 @@ def index():
 
 @app.route('/card', methods=['POST'])
 def card():
-    print 'aaaaaaaa'
-    return render_template('cardDiv.html', servClass = request.form['servClass'])
+    model = request.form['model']
+    serviceClass = request.form['servClass']
+    if model == 'emlm':
+        return render_template('serv_class_card_emlm.html', servClass = serviceClass)
+    elif model == 'enmlm':
+        return render_template('serv_class_card_enlm.html', servClass = serviceClass)
 
 @app.route('/getInput', methods=['POST'])
 def getInput():
-    model = request.form['trafficModel']
+    model = request.form['model']
     if model == 'emlm':
         return render_template('input_emlm.html')
     elif model == 'enmlm':
@@ -22,6 +27,7 @@ def getInput():
 @app.route('/process', methods=['POST'])
 def process():
     result = request.form
+    model = result['teletrafficModel']
     c = int(result['linkCapacity'])
     k = int(result['numOfServiceClasses'])
     a_list = []
@@ -29,7 +35,7 @@ def process():
     t_list = []
     for i in range(k):
         akey = 'trafficLoad' + str(i + 1)
-        a_list.append(int(result[akey]))
+        a_list.append(float(result[akey]))
         bkey = 'bwDemand' + str(i + 1) 
         b_list.append(int(result[bkey]))
 
@@ -40,16 +46,43 @@ def process():
     else:
         t_list = None
 
-    emlmObj = EMLM(c, k , b_list, a_list, t_list)
+    if model == 'emlm':
+        emlmObj = EMLM(c, k , b_list, a_list, t_list)
     
-    qj = emlmObj.get_q()
-    qj_norm = emlmObj.get_qNorm()
-    congProb = emlmObj.get_pbk()
-    ykj = emlmObj.get_ykj()
-    U = emlmObj.get_u()
+        qj = emlmObj.get_q()
+        qj_norm = emlmObj.get_qNorm()
+        congProb = emlmObj.get_pbk()
+        ykj = emlmObj.get_ykj()
+        U = emlmObj.get_u()
     
-    results_dict = {'qj': qj, 'qj_norm': qj_norm, 'congProb': congProb, 'ykj': ykj, 'u': U}
+        results_dict = {'qj': qj, 'qj_norm': qj_norm, 'congProb': congProb, 'ykj': ykj, 'u': U}
     
+    elif  model == 'enmlm':
+        n_list = []
+        for i in range(k):
+            nkey = 'totSources' + str(i + 1)
+            n_list.append(int(result[nkey]))
+        
+        print k
+        print c
+        print n_list
+        print b_list
+        print a_list
+        print t_list
+        
+        enmlmObj = EnMLM(c, k , n_list, b_list, a_list, t_list)
+
+        qErlj = enmlmObj.get_qErl()
+        print qErlj
+        qErlNormj = enmlmObj.get_qErlNorm()
+        ykj = enmlmObj.get_erl_ykj()
+        qj = enmlmObj.get_qEng()
+        qNormj = enmlmObj.get_qEngNorm()
+        Cong_prob = enmlmObj.get_pbk()
+        U = enmlmObj.get_u()
+    
+        results_dict = {'qj': qj, 'qj_norm': qNormj, 'congProb': Cong_prob, 'ykj': ykj, 'u': U}
+
     #result = {'qj': qj, 'qj_norm': qj_norm, 'congProb': congProb, 'ykj': ykj, 'u': U}
     #print result
     result = render_template('result.html', results = results_dict)
