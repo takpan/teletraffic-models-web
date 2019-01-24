@@ -10,9 +10,9 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <!-- Include Bootstrap JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-		<script type=text/javascript>
-			$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-		</script>
+    <script type=text/javascript>
+      $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
     </head>
     <style>
         .container{
@@ -21,177 +21,106 @@
         }
     </style>
 
-	<body>
-		<div class="jumbotron jumbotron-fluid">
-			<div class="container">
-				<h1 class="display-4">Multirate Teletraffic Loss Models</h1>
-				<p class="lead">Calculations for several teletraffic loss models</p>
-			</div>
-		</div>
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-5">
-					<form class="border" style="padding-left: 15px; padding-right: 15px; padding-bottom: 15px" method="post" action="http://localhost:5000/">
-						<div class="form-group">
-							<h4 class="padding-bottom-xl">Input data</h4>
-						</div>
-						<div class="form-group">
-							<label for="teletrafficModelId">Model:</label>
-							<select class="form-control" name="teletrafficModel" id="teletrafficModelId">
-								<option value="emlm">EMLM</option>
-								<option value="enmlm">EnMLM</option>
-							</select>
-						</div>
-						<div class="form-group">
-							<label for="teletrafficModelId">Calculate:</label>
-							<div class="radio">
-								<label class="radio-inline" style="margin-right: 20px"><input type="radio" name="optradio" style="margin-right: 10px" checked>Blocking probabilities</label>
-								<label class="radio-inline"><input type="radio" name="optradio" style="margin-right: 10px" disabled>Link capacity</label>
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="linkCapacityId">Link Capacity (<i>C</i>):</label>
-							<input type="text" class="form-control" name="linkCapacity" id="linkCapacityId" placeholder="Bandwidth units">
-						</div>
-						<div class="form-group">
-							<label for="numOfServiceClassesId">Number of service classes (<i>k</i>):</label>
-							<input type="number" name="numOfServiceClasses" id="numOfServiceClassesId" value="1" min="2" max="6">
-							<small id="numOfServiceClassesHelp" class="form-text text-muted">Max value = 6</small>
-						</div>
-						<div class="checkbox">
-  							<label><input type="checkbox" name="bwReservation" id="bwReservationId" style="margin-right: 10px" value="checked">Bandwidth Reservation</label>
-						</div>
-						<hr>
-						<div class="form-group" id="cards">
-							<div class="card" id="servClass1" style="margin-bottom: 20px">
-								<div class="card-header">
-									Service class 1
-								</div>
-								<div class="card-body">
-									<div class="form-group row">
-										<label for="trafficLoad1Id" class="col-sm-5 col-form-label">Traffic load (<i>a</i>):</label>
-										<div class="col-sm-7">
-											<input type="text" name="trafficLoad1" class="form-control" id="trafficLoad1Id" placeholder="Erlangs">
-										</div>
-									</div>
-									<div class="form-group row">
-										<label for="bwDemand1Id" class="col-sm-5 col-form-label">Bandwidth demand (<i>b</i>):</label>
-										<div class="col-sm-7">
-											<input type="text" name="bwDemand1" class="form-control" id="bwDemand1Id" placeholder="Bandwidth units">
-										</div>
-									</div>
-									<div class="form-group row">
-										<label for="reservedBw1Id" class="col-sm-5 col-form-label">Reserved bandwidth (<i>t</i>):</label>
-										<div class="col-sm-7">
-											<input type="text" name="reservedBw1" class="form-control br" id="reservedBw1Id" placeholder="Bandwidth units">
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="card" id="servClass1" style="margin-bottom: 20px">
-								<div class="card-header">
-									Service class 2
-								</div>
-								<div class="card-body">
-									<div class="form-group row">
-										<label for="trafficLoad1Id" class="col-sm-5 col-form-label">Traffic load (<i>a</i>):</label>
-										<div class="col-sm-7">
-											<input type="text" name="trafficLoad2" class="form-control" id="trafficLoad2Id" placeholder="Erlangs">
-										</div>
-									</div>
-									<div class="form-group row">
-										<label for="bwDemand1Id" class="col-sm-5 col-form-label">Bandwidth demand (<i>b</i>):</label>
-										<div class="col-sm-7">
-											<input type="text" name="bwDemand2" class="form-control" id="bwDemand2Id" placeholder="Bandwidth units">
-										</div>
-									</div>
-									<div class="form-group row">
-										<label for="reservedBw2Id" class="col-sm-5 col-form-label">Reserved bandwidth (<i>t</i>):</label>
-										<div class="col-sm-7">
-											<input type="text" name="reservedBw2" class="form-control br" id="reservedBw2Id" placeholder="Bandwidth units">
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<br>
-						<button type="submit" class="btn btn-primary">Calcuate</button>
-					</form>
-				</div>
-				<div class="col-lg-7 border">
-					<h4 class="padding-bottom-xl">Results</h4>
-					<div id="results">
-					</div>
-				</div>
-			</div>
-		</div>
-		<br>
-		<footer class="page-footer font-small pt-4" style="min-height: 200px; background-color: grey;">
-			<div>
-			</div>
-		</footer>
+  <body>
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <h1 class="display-4">Multirate Teletraffic Loss Models</h1>
+    <p class="lead">Calculations for several teletraffic loss models</p>
+  </div>
+</div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-5">
+          <form class="border" style="padding-left: 15px; padding-right: 15px; padding-bottom: 15px" method="post" action="http://localhost:5000/">
+            <div class="form-group">
+              <h4 class="padding-bottom-xl">Input data</h4>
+            </div>
+            <div class="form-group">
+              <label for="teletrafficModelId">Model:</label>
+              <select class="form-control" name="teletraffic-model" id="teletrafficModelId">
+                <option value="emlm">EMLM</option>
+                <option value="enmlm">EnMLM</option>
+              </select>
+            </div>
+            <div id="inputData">
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary">Calculate</button>
+          </form>
+        </div>
+        <div class="col-lg-7 border">
+          <h4 class="padding-bottom-xl">Results</h4>
+          <div id="results">
+          </div>
+        </div>
+      </div>
+    </div>
    </body>
-   
-   
-	<script src="static/bootstrap-input-spinner.js"></script>
-	<script>
-	    $("input[type='number']").inputSpinner()
-	</script>
-	<script>
-		$(document).ready(function() {
-			$("form").on('submit', function(event){
-			
-				$.ajax({
-					url: '/process',
-					data: $('form').serialize(),
-					type: 'POST'
-				})
-				.done(function(data) {
-					//$('#qjId').text('qj: ' + data.qj).show();
-					//$('#qjnormId').text('qj normalized: ' + data.qj_norm).show();
-					//$('#congProbId').text('Congestion probabilities: ' + data.congProb).show();
-					//$('#ykjId').text('ykj: ' + data.ykj).show();
-					//$('#uId').text('Link utilization: ' + data.u).show();
-					//$('#myName').load('./result.html');
-					$("#results").empty();
-					$('#results').append(data);
-				});
-				event.preventDefault();
-			});
-			
-			$("#numOfServiceClassesId").on('input',function(e){
-				var curVal = $("#numOfServiceClassesId").val();
-				var curCards = $("#cards > div").length;
-				//alert(curVal)
-				
-				var diff = curVal - curCards
-				
-				if (diff == 1) {
-					$.post('/card', {servClass: curVal}, 
-					    function(data){
-						$("#cards").append(data);
-					});
-				}
-				else if  (diff == -1){
-					$( "#servClass" + curCards).remove();
-    			
-    			}
+  <script src="static/bootstrap-input-spinner.js"></script>
+  <script>
+    function setInputLayout() {
+      selectedModel = $("#teletrafficModelId").val();
+      $.post('/getInput', {trafficModel: selectedModel}, 
+        function(data){
+        $("#inputData").empty();
+        $('#inputData').append(data);
+        $("input[type='number']").inputSpinner()
+        $(".br").prop("disabled", true);
+      });
+    }
 
-			});
+    $(document).ready(function() {
+      setInputLayout();
 
-			if ($("#bwReservationId").is(':checked')) {
-			  $(".br").prop("disabled", false);
-			} else {
-			  $(".br").prop("disabled", true);
-			}
+      $("form").on('submit', function(event){
+        $.ajax({
+          url: '/process',
+          data: $('form').serialize(),
+          type: 'post'
+        })
+        .done(function(data) {
+          $("#results").empty();
+          $('#results').append(data);
+        });
+        event.preventDefault();
+      });
 
-			$("#bwReservationId" ).on( "click", function() {
-				if ($("#bwReservationId").is(':checked')) {
-				  $(".br").prop("disabled", false);
-				} else {
-				  $(".br").prop("disabled", true);
-				}
-			});
-		});
-	</script>
+      $("#teletrafficModelId").on('change', function(){
+        setInputLayout()
+      });
+
+      $("#numOfServiceClassesId").on('input',function(e){
+        var curVal = $("#numOfServiceClassesId").val();
+        var curCards = $("#cards > div").length;
+        alert(curVal)
+        
+        var diff = curVal - curCards
+        
+        if (diff == 1) {
+          $.post('/card', {servClass: curVal}, 
+              function(data){
+            $("#cards").append(data);
+          });
+        }
+        else if  (diff == -1){
+          $( "#serv-class" + curCards).remove();
+        }
+
+      });
+
+      if ($("#bwReservationId").is(':checked')) {
+        $(".br").prop("disabled", false);
+      } else {
+        $(".br").prop("disabled", true);
+      }
+
+      $("#bwReservationId").on("click", function() {
+        if ($("#bw-reservation-id").is(':checked')) {
+          $(".br").prop("disabled", false);
+        } else {
+          $(".br").prop("disabled", true);
+        }
+      });
+    });
+  </script>
 </html>

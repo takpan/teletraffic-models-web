@@ -1,0 +1,72 @@
+<div class="form-group">
+  <label for="teletrafficModelId">Calculate:</label>
+  <div class="radio">
+    <label class="radio-inline" style="margin-right: 20px"><input type="radio" name="optradio" style="margin-right: 10px" checked>Blocking probabilities</label>
+    <label class="radio-inline"><input type="radio" name="optradio" style="margin-right: 10px" disabled>Link capacity</label>
+  </div>
+</div>
+<div class="form-group">
+  <label for="link-capacity-id">Link Capacity:</label>
+  <input type="text" class="form-control" name="link-capacity" id="link-capacity-id" placeholder="Bandwidth units">
+</div>
+<div class="form-group">
+  <label for="num-of-service-classes-id">Number of service classes:</label>
+  <input type="number" name="num-of-service-classes" id="num-of-service-classes-id" value="1" min="2" max="6">
+  <small id="num-of-service-classes-help" class="form-text text-muted">Max value = 6</small>
+</div>
+<div class="checkbox">
+  <label><input type="checkbox" name="bw-reservation" id="bw-reservation-id" style="margin-right: 10px" value="checked">Bandwidth Reservation</label>
+</div>
+<hr>
+<div class="form-group" id="cards">
+  <div class="card" id="serv-class-1" style="margin-bottom: 20px">
+    <div class="card-header">
+      Service class 1
+    </div>
+    <div class="card-body">
+      <div class="form-group row">
+        <label for="traffic-load-1-id" class="col-sm-5 col-form-label">Traffic load (<i>a</i>):</label>
+        <div class="col-sm-7">
+          <input type="text" name="traffic-load-1" class="form-control" id="traffic-load-1-id" placeholder="Erlangs">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="bw-demand-1-id" class="col-sm-5 col-form-label">Bandwidth demand (<i>b</i>):</label>
+        <div class="col-sm-7">
+          <input type="text" name="bw-demand-1" class="form-control" id="bw-demand-1-id" placeholder="Bandwidth units">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="reserved-bw-1-id" class="col-sm-5 col-form-label">Reserved bandwidth (<i>t</i>):</label>
+        <div class="col-sm-7">
+          <input type="text" name="reserved-bw-1" class="form-control br" id="reserved-bw-1-id" placeholder="Bandwidth units">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card" id="serv-class-1" style="margin-bottom: 20px">
+    <div class="card-header">
+      Service class 2
+    </div>
+    <div class="card-body">
+      <div class="form-group row">
+        <label for="traffic-load-2-id" class="col-sm-5 col-form-label">Traffic load (<i>a</i>):</label>
+        <div class="col-sm-7">
+          <input type="text" name="traffic-load-2" class="form-control" id="traffic-load-2-id" placeholder="Erlangs">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="bw-demand-2-id" class="col-sm-5 col-form-label">Bandwidth demand (<i>b</i>):</label>
+        <div class="col-sm-7">
+          <input type="text" name="bw-demand-2" class="form-control" id="bw-demand-2-id" placeholder="Bandwidth units">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="reserved-bw-2-id" class="col-sm-5 col-form-label">Reserved bandwidth (<i>t</i>):</label>
+        <div class="col-sm-7">
+          <input type="text" name="reserved-bw-2" class="form-control br" id="reserved-bw-2-id" placeholder="Bandwidth units">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

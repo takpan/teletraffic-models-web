@@ -8,9 +8,18 @@ def index():
 
 @app.route('/card', methods=['POST'])
 def card():
+    print 'aaaaaaaa'
     return render_template('cardDiv.html', servClass = request.form['servClass'])
 
-@app.route('/process', methods=['post'])
+@app.route('/getInput', methods=['POST'])
+def getInput():
+    model = request.form['trafficModel']
+    if model == 'emlm':
+        return render_template('input_emlm.html')
+    elif model == 'enmlm':
+        return render_template('input_enmlm.html')
+
+@app.route('/process', methods=['POST'])
 def process():
     result = request.form
     c = int(result['linkCapacity'])
