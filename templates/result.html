@@ -2,8 +2,8 @@
 <table class="table table-bordered">
 	<thead>
 	    <tr>
-			<th scope="col">service class</th>
-			<th scope="col">Blocking Probability</th>
+			<th scope="col">service class (<i>k</i>)</th>
+			<th scope="col">Blocking Probability (<i>Pb<sub>k</sub></i>)</th>
 	    </tr>
 	</thead>
 	<tbody>
@@ -19,7 +19,7 @@
 <table class="table table-bordered">
 	<tbody>
 		<tr>
-		  <th scope="row">Link Utilization</th>
+		  <th scope="row">Link Utilization (<i>U</i>)</th>
 		  <td>{{ results['u'] }}</td>
 		</tr>
 	</tbody>
@@ -28,9 +28,9 @@
 <table class="table table-bordered">
 	<thead>
 	    <tr>
-			<th scope="col">j</th>
-			<th scope="col">qj</th>
-			<th scope="col">qj norm</th>
+			<th scope="col"><i>j</i></th>
+			<th scope="col"><i>q(j)</i></th>
+			<th scope="col"><i>Q(j)</i></th>
 	    </tr>
 	</thead>
 	<tbody>
@@ -47,9 +47,9 @@
 <table class="table table-bordered">
 	<thead>
 	    <tr>
-			<th scope="col">j</th>
+			<th scope="col"><i>j</i></th>
 			{% for value in results['ykj'] %}
-				<td>y{{ loop.index0 + 1}}j</td>
+				<th scope="col"><i>y<sub>{{ loop.index0 + 1}}</sub>(j)</i></td>
 			{% endfor %}
 	    </tr>
 	</thead>

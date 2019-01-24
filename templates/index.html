@@ -22,12 +22,12 @@
     </style>
 
 	<body>
-<div class="jumbotron jumbotron-fluid">
-  <div class="container">
-    <h1 class="display-4">Multirate Teletraffic Loss Models</h1>
-    <p class="lead">Calculations for several teletraffic loss models</p>
-  </div>
-</div>
+		<div class="jumbotron jumbotron-fluid">
+			<div class="container">
+				<h1 class="display-4">Multirate Teletraffic Loss Models</h1>
+				<p class="lead">Calculations for several teletraffic loss models</p>
+			</div>
+		</div>
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-5">
@@ -50,11 +50,11 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="linkCapacityId">Link Capacity:</label>
+							<label for="linkCapacityId">Link Capacity (<i>C</i>):</label>
 							<input type="text" class="form-control" name="linkCapacity" id="linkCapacityId" placeholder="Bandwidth units">
 						</div>
 						<div class="form-group">
-							<label for="numOfServiceClassesId">Number of service classes:</label>
+							<label for="numOfServiceClassesId">Number of service classes (<i>k</i>):</label>
 							<input type="number" name="numOfServiceClasses" id="numOfServiceClassesId" value="1" min="2" max="6">
 							<small id="numOfServiceClassesHelp" class="form-text text-muted">Max value = 6</small>
 						</div>
@@ -115,7 +115,7 @@
 							</div>
 						</div>
 						<br>
-						<button type="submit" class="btn btn-primary">Submit</button>
+						<button type="submit" class="btn btn-primary">Calcuate</button>
 					</form>
 				</div>
 				<div class="col-lg-7 border">
@@ -125,7 +125,14 @@
 				</div>
 			</div>
 		</div>
+		<br>
+		<footer class="page-footer font-small pt-4" style="min-height: 200px; background-color: grey;">
+			<div>
+			</div>
+		</footer>
    </body>
+   
+   
 	<script src="static/bootstrap-input-spinner.js"></script>
 	<script>
 	    $("input[type='number']").inputSpinner()
