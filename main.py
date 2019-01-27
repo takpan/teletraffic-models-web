@@ -56,6 +56,7 @@ def process():
         U = emlmObj.get_u()
     
         results_dict = {'qj': qj, 'qj_norm': qj_norm, 'congProb': congProb, 'ykj': ykj, 'u': U}
+        result = render_template('result_emlm.html', results = results_dict)
     
     elif  model == 'enmlm':
         n_list = []
@@ -73,7 +74,6 @@ def process():
         enmlmObj = EnMLM(c, k , n_list, b_list, a_list, t_list)
 
         qErlj = enmlmObj.get_qErl()
-        print qErlj
         qErlNormj = enmlmObj.get_qErlNorm()
         ykj = enmlmObj.get_erl_ykj()
         qj = enmlmObj.get_qEng()
@@ -81,11 +81,11 @@ def process():
         Cong_prob = enmlmObj.get_pbk()
         U = enmlmObj.get_u()
     
-        results_dict = {'qj': qj, 'qj_norm': qNormj, 'congProb': Cong_prob, 'ykj': ykj, 'u': U}
+        results_dict = {'qErlj': qErlj, 'qErlNormj': qErlNormj, 'qj': qj, 'qj_norm': qNormj, 'congProb': Cong_prob, 'ykj': ykj, 'u': U}
+        result = render_template('result_enmlm.html', results = results_dict)
 
     #result = {'qj': qj, 'qj_norm': qj_norm, 'congProb': congProb, 'ykj': ykj, 'u': U}
     #print result
-    result = render_template('result.html', results = results_dict)
 
     return jsonify(result)
 #     if request.method == 'POST':

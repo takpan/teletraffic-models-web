@@ -1,0 +1,94 @@
+<br>
+<table class="table table-bordered">
+	<thead>
+	    <tr>
+			<th scope="col">service class (<i>k</i>)</th>
+			<th scope="col">Blocking Probability (<i>Pb<sub>k</sub></i>)</th>
+	    </tr>
+	</thead>
+	<tbody>
+  		{% for value in results['congProb'] %}
+			<tr>
+			  <th scope="row">{{ loop.index0 + 1}}</th>
+			  <td>{{ value }}</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+<br>
+
+<table class="table table-bordered">
+	<tbody>
+		<tr>
+		  <th scope="row">Link Utilization (<i>U</i>)</th>
+		  <td>{{ results['u'] }}</td>
+		</tr>
+	</tbody>
+</table>
+
+<br>
+
+<table class="table table-bordered">
+  <thead>
+      <tr>
+      <th scope="col"><i>j</i></th>
+      <th scope="col"><i>q<sub>Erl</sub>(j)</i></th>
+      <th scope="col"><i>Q<sub>Erl</sub>(j)</i></th>
+      </tr>
+  </thead>
+  <tbody>
+      {% for value in results['qErlj'] %}
+      <tr>
+        <th scope="row">{{ loop.index0 }}</th>
+        <td>{{ value }}</td>
+        <td>{{ results['qErlNormj'][loop.index0] }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<br>
+
+<table class="table table-bordered">
+	<thead>
+	    <tr>
+			<th scope="col"><i>j</i></th>
+			<th scope="col"><i>q(j)</i></th>
+			<th scope="col"><i>Q(j)</i></th>
+	    </tr>
+	</thead>
+	<tbody>
+  		{% for value in results['qj'] %}
+			<tr>
+			  <th scope="row">{{ loop.index0 }}</th>
+			  <td>{{ value }}</td>
+			  <td>{{ results['qj_norm'][loop.index0] }}</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+<br>
+
+<table class="table table-bordered">
+	<thead>
+	    <tr>
+			<th scope="col"><i>j</i></th>
+			{% for value in results['ykj'] %}
+				<th scope="col"><i>y<sub>{{ loop.index0 + 1}}</sub>(j)</i></td>
+			{% endfor %}
+	    </tr>
+	</thead>
+	<tbody>
+  		{% for value in results['ykj'][0] %}
+  			{% set outer_loop = loop %}
+			<tr>
+			  <th scope="row">{{ outer_loop.index0 }}</th>
+			  {% for value2 in results['ykj'] %}
+				<td>{{ results['ykj'][loop.index0][outer_loop.index0] }}</td>
+			  {% endfor %}
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>

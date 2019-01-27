@@ -38,8 +38,8 @@
             <div class="form-group">
               <label for="teletrafficModelId">Model:</label>
               <select class="form-control" name="teletrafficModel" id="teletrafficModelId">
-                <option value="emlm">EMLM</option>
-                <option value="enmlm">EnMLM</option>
+                <option value="emlm">EMLM (Kaufman - Roberts)</option>
+                <option value="enmlm">EnMLM (Stasiak - Glabowski)</option>
               </select>
             </div>
             <div id="inputData">
@@ -94,26 +94,30 @@
         setInputLayout()
       });
 
-      $(document).on('input','#numOfServiceClassesId', function(e){
+      $(document).on('change','#numOfServiceClassesId', function(e){
         var curModel = $("#teletrafficModelId").val();
         var curVal = $("#numOfServiceClassesId").val();
         var curCards = $("#cards > div").length;
         
         var diff = curVal - curCards
         
-        if (diff == 1) {
-          $.post('/card', {servClass: curVal, model: curModel}, 
-            function(data){
-              $("#cards").append(data);
-              if ($("#bwReservationId").is(':checked')) {
-                $(".br").prop("disabled", false);
-              } else {
-                $(".br").prop("disabled", true);
-              } 
-          });
+        if (diff > 0) {
+          for (i = 0; i < diff; i++) {
+	          $.post('/card', {servClass: curCards + 1 + i, model: curModel}, 
+	            function(data){
+	              $("#cards").append(data);
+	              if ($("#bwReservationId").is(':checked')) {
+	                $(".br").prop("disabled", false);
+	              } else {
+	                $(".br").prop("disabled", true);
+	              } 
+	          });
+          }
         }
-        else if  (diff == -1){
-          $( "#servClass" + curCards).remove();
+        else if  (diff < 0){
+          for (i = 0; i < Math.abs(diff); i++) {
+            $( "#servClass" + (curCards - i)).remove();
+          }
         }
 
       });
