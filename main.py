@@ -1,6 +1,7 @@
 from flask import Flask, render_template, jsonify, request
 from EMLM import EMLM
 from EnMLM import EnMLM
+from EEMLM import EEMLM
 app = Flask(__name__)
 
 @app.route('/')
@@ -11,7 +12,7 @@ def index():
 def card():
     model = request.form['model']
     serviceClass = request.form['servClass']
-    if model == 'emlm':
+    if model in ('emlm', 'eemlm'):
         return render_template('serv_class_card_emlm.html', servClass = serviceClass)
     elif model == 'enmlm':
         return render_template('serv_class_card_enmlm.html', servClass = serviceClass)
@@ -23,6 +24,8 @@ def getInput():
         return render_template('input_emlm.html')
     elif model == 'enmlm':
         return render_template('input_enmlm.html')
+    elif model == 'eemlm':
+        return render_template('input_eemlm.html')
 
 @app.route('/process', methods=['POST'])
 def process():
@@ -83,6 +86,20 @@ def process():
     
         results_dict = {'qErlj': qErlj, 'qErlNormj': qErlNormj, 'qj': qj, 'qj_norm': qNormj, 'congProb': Cong_prob, 'ykj': ykj, 'u': U}
         result = render_template('result_enmlm.html', results = results_dict)
+    
+    elif model == 'eemlm':
+        t = int(result['virtualLinkCapacity'])
+        eemlmObj = EEMLM(c, t, k , b_list, a_list, t_list)
+    
+        qj = eemlmObj.get_q()
+        qj_norm = eemlmObj.get_qNorm()
+        congProb = eemlmObj.get_pbk()
+        ykj = eemlmObj.get_ykj()
+        U = eemlmObj.get_u()
+    
+        results_dict = {'qj': qj, 'qj_norm': qj_norm, 'congProb': congProb, 'ykj': ykj, 'u': U}
+        result = render_template('result_emlm.html', results = results_dict)
+        
 
     #result = {'qj': qj, 'qj_norm': qj_norm, 'congProb': congProb, 'ykj': ykj, 'u': U}
     #print result
