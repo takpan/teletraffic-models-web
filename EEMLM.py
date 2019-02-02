@@ -62,14 +62,14 @@ class EEMLM(object):
             yjList = []
             for j in range(0, self._t + 1):
                 y = 0
-                if (j - self._bList[i]) >= 0 and self._qList[j] > 0:
+                if (j - self._bList[i]) >= 0 and self._qList[j] > 0 and j <= self._t - self._tList[i]:
                     y = self._aList[i] * self._bList[i] * self._qList[j - self._bList[i]] * (1 + yjList[j - self._bList[i]])
                     coef = min(self._c, j)
                     y *= 1.0 / (coef * self._qList[j])
                     
                     sum = 0
                     for n in range (0, self._k):
-                        if n != i and j - self._bList[n] >= 0:
+                        if n != i and j - self._bList[n] >= 0 and j <= self._t - self._tList[n]:
                             sum += self._aList[n] * self._bList[n] * self._qList[j - self._bList[n]] * yjList[j - self._bList[n]]
                     coef = min(self._c, j)
                     y += (1.0 / (coef * self._qList[j])) * sum
