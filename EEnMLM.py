@@ -1,7 +1,8 @@
-class EnMLM(object):
+class EEnMLM(object):
     # Engset Multirate Loss Model calculations using the approximate Stasiak-Glabowski method
-    def __init__(self, c, k, nList, bList, aEngList = None, tList = None, lEngList = None, mEngList = None):
+    def __init__(self, c, t, k, nList, bList, aEngList = None, tList = None, lEngList = None, mEngList = None):
         self._c = c  # set total capacity of the system
+        self._t = t
         self._k = k # set the number of service classes
         self._nList = nList
         self._bList = bList # set the bandwidth requirement of service classes
@@ -18,7 +19,7 @@ class EnMLM(object):
         self._aList = [0] * self._k # initialize (set to zero) the corresponding Erlang traffic loads
         for i in range(0, self._k):
             self._aList[i] = self._aEngList[i] * self._nList[i] # calculate the corresponding Erlang traffic loads
-        self._qErlList = self._calc_qj() # calculate the corresponding Erlang unnormalized q values
+        self._qErlList = self._calc_qj_erl() # calculate the corresponding Erlang unnormalized q values
         self._qErlNormList = self._calc_erl_norm_qj() # calculate the corresponding Erlang normalized q values
         self._erl_ykjList = self._calc_erl_ykj() # calculate the ykj values
         self._qEngList = self._calc_qj_engset() # calculate the (Engset) q values
@@ -34,63 +35,74 @@ class EnMLM(object):
             aList.append(a)
         return aList
 
-    def _calc_qj(self):
-        # Calculate the corresponding EMLM unnormalized values of qj's 
-        qList = []
-        for j in range(0, self._c + 1):
+    def _calc_qj_erl(self):
+        # Calculate the unnormalized values of qj's using the exact recursive Kaufman-Roberts formula
+        qErlList = []
+        for j in range(0, self._t + 1):
             if j == 0:
                 qj = 1.0
             else:
                 qj = 0
                 for i in range(0, self._k):
-                    if (j - self._bList[i]) >= 0 and j <= self._c - self._tList[i]:
-                        qj += self._aList[i] * self._bList[i] * qList[j - self._bList[i]] 
-                qj *= 1.0/j
-            qList.append(qj)
-        return qList
-    
+                    if (j - self._bList[i]) >= 0 and j <= self._t - self._tList[i]:
+                        qj += self._aList[i] * self._bList[i] * qErlList[j - self._bList[i]]
+                coef = min(self._c, j)
+                qj *= 1.0 / coef
+            qErlList.append(qj)
+        return qErlList
+
     def _calc_erl_norm_qj(self):
         # Calculate the corresponding EMLM normalized values of qj's
         qErlNormList = []
         g = sum(self._qErlList)
-        for j in range(0, self._c + 1):
+        for j in range(0, self._t + 1):
             qErlNorm = self._qErlList[j] / g
             qErlNormList.append(qErlNorm)
         return qErlNormList
 
     def _calc_erl_ykj(self):
-        # Calculate the corresponding EMLM values of yk(j)'s and store them in a two-dimensional list
+        # Calculate the values of yk(j)'s and store them in a two-dimensional list
         ykjList = []
         for i in range (0, self._k):
             yjList = []
-            for j in range(0, self._c + 1):
+            for j in range(0, self._t + 1):
                 y = 0
                 if (j - self._bList[i]) >= 0 and self._qErlList[j] > 0:
-                    y = self._aList[i] * self._qErlList[j - self._bList[i]] / self._qErlList[j]
+                    y = self._aList[i] * self._bList[i] * self._qErlList[j - self._bList[i]] * (1 + yjList[j - self._bList[i]])
+                    coef = min(self._c, j)
+                    y *= 1.0 / (coef * self._qErlList[j])
+                    
+                    sum = 0
+                    for n in range (0, self._k):
+                        if n != i and j - self._bList[n] >= 0:
+                            sum += self._aList[n] * self._bList[n] * self._qErlList[j - self._bList[n]] * yjList[j - self._bList[n]]
+                    coef = min(self._c, j)
+                    y += (1.0 / (coef * self._qErlList[j])) * sum
                 yjList.append(y)
             ykjList.append(yjList)
         return ykjList
 
     def _calc_qj_engset(self):
         # Calculate the EnMLM unnormalized values of qj's using the approximate recursive formula of Stasiak-Glabowski
-        qList = []
-        for j in range(0, self._c + 1):
+        qErlList = []
+        for j in range(0, self._t + 1):
             if j == 0:
                 qj = 1.0
             else:
                 qj = 0
                 for i in range(0, self._k):
-                    if (j - self._bList[i]) >= 0 and j <= self._c - self._tList[i]:
-                        qj += (self._nList[i] - self._erl_ykjList[i][j - self._bList[i]]) * self._aEngList[i] * self._bList[i] * qList[j - self._bList[i]] 
-                qj *= 1.0/j
-            qList.append(qj)
-        return qList
+                    if (j - self._bList[i]) >= 0 and j <= self._t - self._tList[i]:
+                        qj += (self._nList[i] - self._erl_ykjList[i][j - self._bList[i]]) * self._aEngList[i] * self._bList[i] * qErlList[j - self._bList[i]]
+                coef = min(self._c, j)
+                qj *= 1.0 / coef
+            qErlList.append(qj)
+        return qErlList
 
     def _calc_eng_norm_qj(self):
         # Calculate the normalized values of qj's
         qEngNormList = []
         g = sum(self._qEngList)
-        for j in range(0, self._c + 1):
+        for j in range(0, self._t + 1):
             qEngNorm = self._qEngList[j] / g
             qEngNormList.append(qEngNorm)
         return qEngNormList
@@ -100,8 +112,8 @@ class EnMLM(object):
         pbList = []
         for i in range (0, self._k):
             pb = 0
-            minj = self._c - self._bList[i] - self._tList[i] + 1
-            for j in range (minj, self._c + 1):
+            minj = self._t - self._bList[i] - self._tList[i] + 1
+            for j in range (minj, self._t + 1):
                 pb += self._qEngNormList[j]
             pbList.append(pb)
         return pbList
@@ -111,13 +123,15 @@ class EnMLM(object):
         u = 0
         for j in range(1, self._c + 1):
             u += j * self._qEngNormList[j]
+        for j in range(self._c + 1, self._t + 1):
+            u += self._c * self._qEngNormList[j]
         return u
     
     def _update_obj(self):
         # Update the object when an instance variable changes
         for i in range(0, self._k):
             self._aList[i] = self._aEngList[i] * self._nList[i]
-        self._qErlList = self._calc_qj()
+        self._qErlList = self._calc_qj_erl()
         self._qErlNormList = self._calc_erl_norm_qj()
         self._erl_ykjList = self._calc_erl_ykj()
         self._qEngList = self._calc_qj_engset()

@@ -2,6 +2,7 @@ from flask import Flask, render_template, jsonify, request
 from EMLM import EMLM
 from EnMLM import EnMLM
 from EEMLM import EEMLM
+from EEnMLM import EEnMLM
 app = Flask(__name__)
 
 @app.route('/')
@@ -26,6 +27,8 @@ def getInput():
         return render_template('input_enmlm.html')
     elif model == 'eemlm':
         return render_template('input_eemlm.html')
+    elif model == 'eenmlm':
+        return render_template('input_eenmlm.html')
 
 @app.route('/process', methods=['POST'])
 def process():
@@ -67,13 +70,6 @@ def process():
             nkey = 'totSources' + str(i + 1)
             n_list.append(int(result[nkey]))
         
-        print k
-        print c
-        print n_list
-        print b_list
-        print a_list
-        print t_list
-        
         enmlmObj = EnMLM(c, k , n_list, b_list, a_list, t_list)
 
         qErlj = enmlmObj.get_qErl()
@@ -99,6 +95,26 @@ def process():
     
         results_dict = {'qj': qj, 'qj_norm': qj_norm, 'congProb': congProb, 'ykj': ykj, 'u': U}
         result = render_template('result_emlm.html', results = results_dict)
+
+    elif  model == 'eenmlm':
+        n_list = []
+        for i in range(k):
+            nkey = 'totSources' + str(i + 1)
+            n_list.append(int(result[nkey]))
+        t = int(result['virtualLinkCapacity'])
+        
+        eenmlmObj = EEnMLM(c, t, k , n_list, b_list, a_list, t_list)
+
+        qErlj = eenmlmObj.get_qErl()
+        qErlNormj = eenmlmObj.get_qErlNorm()
+        ykj = eenmlmObj.get_erl_ykj()
+        qj = eenmlmObj.get_qEng()
+        qNormj = eenmlmObj.get_qEngNorm()
+        Cong_prob = eenmlmObj.get_pbk()
+        U = eenmlmObj.get_u()
+    
+        results_dict = {'qErlj': qErlj, 'qErlNormj': qErlNormj, 'qj': qj, 'qj_norm': qNormj, 'congProb': Cong_prob, 'ykj': ykj, 'u': U}
+        result = render_template('result_enmlm.html', results = results_dict)
         
 
     #result = {'qj': qj, 'qj_norm': qj_norm, 'congProb': congProb, 'ykj': ykj, 'u': U}
