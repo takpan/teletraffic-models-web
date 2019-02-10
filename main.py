@@ -3,6 +3,7 @@ from EMLM import EMLM
 from EnMLM import EnMLM
 from EEMLM import EEMLM
 from EEnMLM import EEnMLM
+from SRM import SRM
 app = Flask(__name__)
 
 @app.route('/')
@@ -17,6 +18,8 @@ def card():
         return render_template('serv_class_card_emlm.html', servClass = serviceClass)
     elif model == 'enmlm':
         return render_template('serv_class_card_enmlm.html', servClass = serviceClass)
+    elif model == 'srm':
+        return render_template('serv_class_card_srm.html', servClass = serviceClass)
 
 @app.route('/getInput', methods=['POST'])
 def getInput():
@@ -29,6 +32,8 @@ def getInput():
         return render_template('input_eemlm.html')
     elif model == 'eenmlm':
         return render_template('input_eenmlm.html')
+    elif model == 'srm':
+        return render_template('input_srm.html')
 
 @app.route('/process', methods=['POST'])
 def process():
@@ -115,7 +120,26 @@ def process():
     
         results_dict = {'qErlj': qErlj, 'qErlNormj': qErlNormj, 'qj': qj, 'qj_norm': qNormj, 'congProb': Cong_prob, 'ykj': ykj, 'u': U}
         result = render_template('result_enmlm.html', results = results_dict)
+
+    elif model == 'srm':
+        ar_list = []
+        br_list = []
+        for i in range(k):
+            arkey = 'retryTrafficLoad' + str(i + 1)
+            ar_list.append(float(result[arkey]))
+            brkey = 'rbwDemand' + str(i + 1)
+            br_list.append(int(result[brkey]))
+
+        srmObj = SRM(c, k , b_list, br_list, a_list, ar_list, t_list)
         
+        qj = srmObj.get_q()
+        qj_norm = srmObj.get_qNorm()
+        congProb = srmObj.get_pbk()
+        ykj = srmObj.get_ykj()
+        U = srmObj.get_u()
+    
+        results_dict = {'qj': qj, 'qj_norm': qj_norm, 'congProb': congProb, 'ykj': ykj, 'u': U}
+        result = render_template('result_emlm.html', results = results_dict)
 
     #result = {'qj': qj, 'qj_norm': qj_norm, 'congProb': congProb, 'ykj': ykj, 'u': U}
     #print result

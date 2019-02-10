@@ -1,0 +1,96 @@
+<div class="form-group">
+  <label>Calculate:</label>
+  <div class="radio">
+    <label class="radio-inline" style="margin-right: 20px"><input type="radio" name="optradio" style="margin-right: 10px" checked>Blocking probabilities</label>
+    <label class="radio-inline"><input type="radio" name="optradio" style="margin-right: 10px" disabled>Link capacity</label>
+  </div>
+</div>
+<div class="form-group">
+  <label for="linkCapacityId">Link Capacity (<i>C</i>):</label>
+  <input type="text" class="form-control" name="linkCapacity" id="linkCapacityId" placeholder="Bandwidth units">
+</div>
+<div class="form-group">
+  <label for="numOfServiceClassesId">Number of service classes (<i>k</i>):</label>
+  <input type="number" name="numOfServiceClasses" id="numOfServiceClassesId" value="1" min="2" max="6" readonly="readonly">
+  <small id="numOfServiceClassesIdHelp" class="form-text text-muted">Max value = 6</small>
+</div>
+<div class="checkbox">
+  <label><input type="checkbox" name="bwReservation" id="bwReservationId" style="margin-right: 10px" value="checked">Bandwidth Reservation</label>
+</div>
+<hr>
+<div class="form-group" id="cards">
+  <div class="card" id="servClass1" style="margin-bottom: 20px">
+    <div class="card-header">
+      Service class 1
+    </div>
+    <div class="card-body">
+      <div class="form-group row">
+        <label for="trafficLoad1id" class="col-sm-5 col-form-label">Traffic load (<i>a</i>):</label>
+        <div class="col-sm-7">
+          <input type="text" name="trafficLoad1" class="form-control" id="trafficLoad1id" placeholder="Erlangs">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="retryTrafficLoad1id" class="col-sm-5 col-form-label">Retry traffic load (<i>a<sub>r</sub></i>):</label>
+        <div class="col-sm-7">
+          <input type="text" name="retryTrafficLoad1" class="form-control" id="retryTrafficLoad1id" placeholder="Erlangs">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="bwDemand1Id" class="col-sm-5 col-form-label">Bandwidth demand (<i>b</i>):</label>
+        <div class="col-sm-7">
+          <input type="text" name="bwDemand1" class="form-control" id="bwDemand1Id" placeholder="Bandwidth units">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="rbwDemand1Id" class="col-sm-5 col-form-label">Retry bandwidth demand (<i>b<sub>r</sub></i>):</label>
+        <div class="col-sm-7">
+          <input type="text" name="rbwDemand1" class="form-control" id="rbwDemand1Id" placeholder="Bandwidth units">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="reservedBw1Id" class="col-sm-5 col-form-label">Reserved bandwidth (<i>t</i>):</label>
+        <div class="col-sm-7">
+          <input type="text" name="reservedBw1" class="form-control br" id="reservedBw1Id" placeholder="Bandwidth units">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card" id="servClass2" style="margin-bottom: 20px">
+    <div class="card-header">
+      Service class 2
+    </div>
+    <div class="card-body">
+      <div class="form-group row">
+        <label for="trafficLoad2id" class="col-sm-5 col-form-label">Traffic load (<i>a</i>):</label>
+        <div class="col-sm-7">
+          <input type="text" name="trafficLoad2" class="form-control" id="trafficLoad2id" placeholder="Erlangs">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="retryTrafficLoad2id" class="col-sm-5 col-form-label">Retry traffic load (<i>a<sub>r</sub></i>):</label>
+        <div class="col-sm-7">
+          <input type="text" name="retryTrafficLoad2" class="form-control" id="retryTrafficLoad2id" placeholder="Erlangs">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="bwDemand2Id" class="col-sm-5 col-form-label">Bandwidth demand (<i>b</i>):</label>
+        <div class="col-sm-7">
+          <input type="text" name="bwDemand2" class="form-control" id="bwDemand2Id" placeholder="Bandwidth units">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="rbwDemand2Id" class="col-sm-5 col-form-label">Retry bandwidth demand (<i>b<sub>r</sub></i>):</label>
+        <div class="col-sm-7">
+          <input type="text" name="rbwDemand2" class="form-control" id="rbwDemand2Id" placeholder="Bandwidth units">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="reservedBw2Id" class="col-sm-5 col-form-label">Reserved bandwidth (<i>t</i>):</label>
+        <div class="col-sm-7">
+          <input type="text" name="reservedBw2" class="form-control br" id="reservedBw2Id" placeholder="Bandwidth units">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
