@@ -21,7 +21,10 @@ class SRM(object):
         self._qList = self._calc_qj() # unnormalized q values
         self._qNormList = self._calc_norm_qj() # normalized q values
         self._ykj = self._calc_ykj()
-        self._pbk = self._calc_pbk()
+        self._ykrj = self._calc_ykrj()
+        self._bk = self._calc_bk()
+        self._bkr = self._calc_bkr()
+        self._cbkr = self._calc_cbkr()
         self._u = self._calc_u()
         # The length of the list must be equal to k, else raise an exception
     
@@ -45,7 +48,7 @@ class SRM(object):
                     if (j - self._bList[i]) >= 0 and j <= self._c - self._tList[i]:
                         qj += self._aList[i] * self._bList[i] * qList[j - self._bList[i]]
                 for i in range(0, self._k):
-                    if (j - self._bList[i]) >= 0 and j <= self._c - self._tList[i] and j > self._c - (self._bList[i] - self._brList[i]):
+                    if (j - self._brList[i]) >= 0 and j <= self._c - self._tList[i] and j > self._c - (self._bList[i] - self._brList[i]):
                         qj += self._arList[i] * self._brList[i] * qList[j - self._brList[i]]
                 qj *= 1.0/j
             qList.append(qj)
@@ -67,22 +70,54 @@ class SRM(object):
             yjList = []
             for j in range(0, self._c + 1):
                 y = 0
+                if (j - self._bList[i]) >= 0 and self._qList[j] > 0:
+                    y = self._aList[i] * self._qList[j - self._bList[i]] / self._qList[j]
+                yjList.append(y)
+            ykjList.append(yjList)
+        return ykjList
+
+    def _calc_ykrj(self):
+        # Calculate the values of yk(j)'s and store them in a two-dimensional list
+        ykjList = []
+        for i in range (0, self._k):
+            yjList = []
+            for j in range(0, self._c + 1):
+                y = 0
                 if (j > self._c - (self._bList[i] - self._brList[i]) and j - self._brList[i]) >= 0 and self._qList[j] > 0:
                     y = self._arList[i] * self._qList[j - self._brList[i]] / self._qList[j]
                 yjList.append(y)
             ykjList.append(yjList)
         return ykjList
 
-    def _calc_pbk(self):
+    def _calc_bk(self):
         # Calculate the Time Congestion Probabilities = Call Blocking Probabilities
-        pbList = []
+        bkList = []
         for i in range (0, self._k):
-            pb = 0
+            b = 0
             minj = self._c - self._bList[i] - self._tList[i] + 1
             for j in range (minj, self._c + 1):
-                pb += self._qNormList[j]
-            pbList.append(pb)
-        return pbList
+                b += self._qNormList[j]
+            bkList.append(b)
+        return bkList
+
+    def _calc_bkr(self):
+        # Calculate the Time Congestion Probabilities = Call Blocking Probabilities
+        bkrList = []
+        for i in range (0, self._k):
+            br = 0
+            minj = self._c - self._brList[i] - self._tList[i] + 1
+            for j in range (minj, self._c + 1):
+                br += self._qNormList[j]
+            bkrList.append(br)
+        return bkrList
+
+    def _calc_cbkr(self):
+        # Calculate the Time Congestion Probabilities = Call Blocking Probabilities
+        cbkrList = []
+        for i in range (0, self._k):
+            cbr = self._bkr[i] / self._bk[i]
+            cbkrList.append(cbr)
+        return cbkrList
 
     def _calc_u(self):
         # Calculate the link utilization
@@ -96,7 +131,10 @@ class SRM(object):
         self._qList = self._calc_qj()
         self._qNormList = self._calc_norm_qj()
         self._ykj = self._calc_ykj()
-        self._pbk = self._calc_pbk()
+        self._ykrj = self._calc_ykrj()
+        self._bk = self._calc_bk()
+        self._bkr = self._calc_bkr()
+        self._cbkr = self._calc_cbkr()
         self._u = self._calc_u()
     
     # Setters/Getters
@@ -144,14 +182,26 @@ class SRM(object):
     def get_qNorm(self):
         # Get q normalized values
         return self._qNormList
-    
+
     def get_ykj(self):
         # Get ykj values
         return self._ykj
     
-    def get_pbk(self):
+    def get_ykrj(self):
+        # Get ykj values
+        return self._ykrj
+
+    def get_bk(self):
         # Get call blocking probabilities
-        return self._pbk
+        return self._bk
+
+    def get_bkr(self):
+        # Get call blocking probabilities
+        return self._bkr
+
+    def get_cbkr(self):
+        # Get call blocking probabilities
+        return self._cbkr
     
     def get_u(self):
         # Get link utilization value

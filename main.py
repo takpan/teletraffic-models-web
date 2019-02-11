@@ -134,12 +134,15 @@ def process():
         
         qj = srmObj.get_q()
         qj_norm = srmObj.get_qNorm()
-        congProb = srmObj.get_pbk()
+        bk = srmObj.get_bk()
+        bkr = srmObj.get_bkr()
+        cbkr = srmObj.get_cbkr()
         ykj = srmObj.get_ykj()
+        ykrj = srmObj.get_ykrj()
         U = srmObj.get_u()
     
-        results_dict = {'qj': qj, 'qj_norm': qj_norm, 'congProb': congProb, 'ykj': ykj, 'u': U}
-        result = render_template('result_emlm.html', results = results_dict)
+        results_dict = {'qj': qj, 'qj_norm': qj_norm, 'bk': bk, 'bkr': bkr, 'cbkr': cbkr, 'ykj': ykj, 'ykrj': ykrj, 'u': U}
+        result = render_template('result_srm.html', results = results_dict)
 
     #result = {'qj': qj, 'qj_norm': qj_norm, 'congProb': congProb, 'ykj': ykj, 'u': U}
     #print result
