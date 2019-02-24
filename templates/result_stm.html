@@ -3,7 +3,7 @@
 	<thead>
 	    <tr>
 			<th scope="col">service class (<i>k</i>)</th>
-			<th scope="col">Retry Blocking Probability (<i>B<sub>kr</sub></i>)</th>
+			<th scope="col">Retry Blocking Probability (<i>B<sub>kc</sub></i>)</th>
 			<th scope="col">Blocking Probability (<i>B<sub>k</sub></i>)</th>
 			<th scope="col">Conditional Blocking Probability (<i>B<sup>*</sup><sub>kc</sub></i>)</th>
 	    </tr>
@@ -83,7 +83,7 @@
       <tr>
       <th scope="col"><i>j</i></th>
       {% for value in results['ykcj'] %}
-        <th scope="col"><i>y<sub>{{ loop.index0 + 1 }}r</sub>(j)</i></td>
+        <th scope="col"><i>y<sub>{{ loop.index0 + 1 }}c</sub>(j)</i></td>
       {% endfor %}
       </tr>
   </thead>

@@ -173,6 +173,27 @@ def process():
         results_dict = {'qj': qj, 'qj_norm': qj_norm, 'bk': bk, 'bkc': bkc, 'cbkc': cbkc, 'ykj': ykj, 'ykcj': ykcj, 'u': U}
         result = render_template('result_stm.html', results = results_dict)
 
+    elif model == 'stm':
+        ac_list = []
+        bc_list = []
+        for i in range(k):
+            ackey = 'conditionalTrafficLoad' + str(i + 1)
+            ac_list.append(float(result[ackey]))
+            bckey = 'cbwDemand' + str(i + 1)
+            bc_list.append(int(result[bckey]))
+        j0 = int(result['threshold'])
+
+        stmObj = STM(c, k , j0, b_list, bc_list, a_list, ac_list, t_list)
+        
+        qj = stmObj.get_q()
+        qj_norm = stmObj.get_qNorm()
+        congProb = stmObj.get_pbk()
+        ykj = stmObj.get_ykj()
+        U = stmObj.get_u()
+    
+        results_dict = {'qj': qj, 'qj_norm': qj_norm, 'congProb': congProb, 'ykj': ykj, 'u': U}
+        result = render_template('result_emlm.html', results = results_dict)
+
     #result = {'qj': qj, 'qj_norm': qj_norm, 'congProb': congProb, 'ykj': ykj, 'u': U}
     #print result
 
