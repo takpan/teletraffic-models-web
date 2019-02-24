@@ -1,5 +1,5 @@
 class STM(object):
-    # Erlang Multirate Loss Model calculations using the exact recursive formula of Kaufman-Roberts
+    # Single-Threshold Model calculations
     def __init__(self, c, k, j0, bList, bcList, aList = None, acList = None, tList = None, lList = None, mList = None, mcList = None):
         self._c = c  # total capacity of the system
         self._k = k # number of service classes
@@ -22,7 +22,10 @@ class STM(object):
         self._qList = self._calc_qj() # unnormalized q values
         self._qNormList = self._calc_norm_qj() # normalized q values
         self._ykj = self._calc_ykj()
-        self._pbk = self._calc_pbk()
+        self._ykcj = self._calc_ykcj()
+        self._bk = self._calc_bk()
+        self._bkc = self._calc_bkc()
+        self._cbkc = self._calc_cbkc()
         self._u = self._calc_u()
         # The length of the list must be equal to k, else raise an exception
     
@@ -46,7 +49,7 @@ class STM(object):
                     if (j - self._bList[i]) >= 0 and ((j >= 1 and j <= self._j0 + self._bList[i] and self._bcList[i] > 0) or (j >= 1 and j <= self._c and self._bcList[i] == 0)) and j <= self._c - self._tList[i]:
                         qj += self._aList[i] * self._bList[i] * qList[j - self._bList[i]]
                 for i in range(0, self._k):
-                    if (j - self._bList[i]) >= 0 and j > self._j0 + self._bcList[i] and j <= self._c - self._tList[i]:
+                    if self._acList[i]*self._bcList[i] > 0 and (j - self._bcList[i]) >= 0 and j > self._j0 + self._bcList[i] and j <= self._c - self._tList[i]:
                         qj += self._acList[i] * self._bcList[i] * qList[j - self._bcList[i]]
                 qj *= 1.0/j
             qList.append(qj)
@@ -68,22 +71,55 @@ class STM(object):
             yjList = []
             for j in range(0, self._c + 1):
                 y = 0
-                if (j > self._c - (self._bList[i] - self._bcList[i]) and j - self._bcList[i]) >= 0 and self._qList[j] > 0:
+                if (j - self._bList[i]) >= 0 and ((j >= 1 and j <= self._j0 + self._bList[i] and self._bcList[i] > 0) or (j >= 1 and j <= self._c and self._bcList[i] == 0)) and j <= self._c - self._tList[i]:
                     y = self._acList[i] * self._qList[j - self._bcList[i]] / self._qList[j]
                 yjList.append(y)
             ykjList.append(yjList)
         return ykjList
 
-    def _calc_pbk(self):
-        # Calculate the Time Congestion Probabilities = Call Blocking Probabilities
-        pbList = []
+    def _calc_ykcj(self):
+        # Calculate the values of yk(j)'s and store them in a two-dimensional list
+        ykcjList = []
         for i in range (0, self._k):
-            pb = 0
+            ycjList = []
+            for j in range(0, self._c + 1):
+                y = 0
+                if (j - self._bcList[i]) >= 0 and j > self._j0 + self._bcList[i] and j <= self._c - self._tList[i]:
+                    y = self._acList[i] * self._qList[j - self._bcList[i]] / self._qList[j]
+                ycjList.append(y)
+            ykcjList.append(ycjList)
+        return ykcjList
+
+    def _calc_bk(self):
+        # Calculate the Time Congestion Probabilities = Call Blocking Probabilities
+        bkList = []
+        for i in range (0, self._k):
+            b = 0
             minj = self._c - self._bList[i] - self._tList[i] + 1
             for j in range (minj, self._c + 1):
-                pb += self._qNormList[j]
-            pbList.append(pb)
-        return pbList
+                b += self._qNormList[j]
+            bkList.append(b)
+        return bkList
+
+    def _calc_bkc(self):
+        # Calculate the Time Congestion Probabilities = Call Blocking Probabilities
+        bkcList = []
+        for i in range (0, self._k):
+            bc = 0
+            if self._acList[i]*self._bcList[i] > 0:
+                minj = self._c - self._bcList[i] - self._tList[i] + 1
+                for j in range (minj, self._c + 1):
+                    bc += self._qNormList[j]
+            bkcList.append(bc)
+        return bkcList
+
+    def _calc_cbkc(self):
+        # Calculate the conditional blocking probabilities
+        cbkcList = []
+        for i in range (0, self._k):
+            cbc = self._bkc[i] / self._bk[i]
+            cbkcList.append(cbc)
+        return cbkcList
 
     def _calc_u(self):
         # Calculate the link utilization
@@ -97,7 +133,10 @@ class STM(object):
         self._qList = self._calc_qj()
         self._qNormList = self._calc_norm_qj()
         self._ykj = self._calc_ykj()
-        self._pbk = self._calc_pbk()
+        self._ykcj = self._calc_ykcj()
+        self._bk = self._calc_bk()
+        self._bkc = self._calc_bkc()
+        self._cbkc = self._calc_cbkc()
         self._u = self._calc_u()
     
     # Setters/Getters
@@ -137,23 +176,35 @@ class STM(object):
         self._aList = self._calc_ak(mList)
         self._acList = self._calc_ak(mcList)
         self._update_obj()
-        
+
     def get_q(self):
         # Get q values
         return self._qList
-    
+
     def get_qNorm(self):
         # Get q normalized values
         return self._qNormList
-    
+
     def get_ykj(self):
         # Get ykj values
         return self._ykj
-    
-    def get_pbk(self):
-        # Get call blocking probabilities
-        return self._pbk
-    
+
+    def get_ykcj(self):
+        # Get ykcj values
+        return self._ykcj
+
+    def get_bk(self):
+        # Get blocking probabilities
+        return self._bk
+
+    def get_bkc(self):
+        # Get threshold blocking probabilities
+        return self._bkc
+
+    def get_cbkc(self):
+        # Get conditional blocking probabilities
+        return self._cbkc
+
     def get_u(self):
         # Get link utilization value
         return self._u

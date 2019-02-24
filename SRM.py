@@ -1,5 +1,5 @@
 class SRM(object):
-    # Erlang Multirate Loss Model calculations using the exact recursive formula of Kaufman-Roberts
+    # Single-Retry Model calculations
     def __init__(self, c, k, bList, brList, aList = None, arList = None, tList = None, lList = None, mList = None, mrList = None):
         self._c = c  # total capacity of the system
         self._k = k # number of service classes
@@ -48,7 +48,7 @@ class SRM(object):
                     if (j - self._bList[i]) >= 0 and j <= self._c - self._tList[i]:
                         qj += self._aList[i] * self._bList[i] * qList[j - self._bList[i]]
                 for i in range(0, self._k):
-                    if self._arList[i]*self._bList[i] > 0 and (j - self._brList[i]) >= 0 and j <= self._c - self._tList[i] and j > self._c - (self._bList[i] - self._brList[i]):
+                    if self._arList[i]*self._brList[i] > 0 and (j - self._brList[i]) >= 0 and j <= self._c - self._tList[i] and j > self._c - (self._bList[i] - self._brList[i]):
                         qj += self._arList[i] * self._brList[i] * qList[j - self._brList[i]]
                 qj *= 1.0/j
             qList.append(qj)
@@ -67,18 +67,18 @@ class SRM(object):
         # Calculate the values of yk(j)'s and store them in a two-dimensional list
         ykjList = []
         for i in range (0, self._k):
-            yjList = []
+            yrjList = []
             for j in range(0, self._c + 1):
                 y = 0
                 if (j - self._bList[i]) >= 0 and self._qList[j] > 0:
                     y = self._aList[i] * self._qList[j - self._bList[i]] / self._qList[j]
-                yjList.append(y)
-            ykjList.append(yjList)
+                yrjList.append(y)
+            ykjList.append(yrjList)
         return ykjList
 
     def _calc_ykrj(self):
         # Calculate the values of yk(j)'s and store them in a two-dimensional list
-        ykjList = []
+        ykrjList = []
         for i in range (0, self._k):
             yjList = []
             for j in range(0, self._c + 1):
@@ -86,8 +86,8 @@ class SRM(object):
                 if (j > self._c - (self._bList[i] - self._brList[i]) and j - self._brList[i]) >= 0 and self._qList[j] > 0:
                     y = self._arList[i] * self._qList[j - self._brList[i]] / self._qList[j]
                 yjList.append(y)
-            ykjList.append(yjList)
-        return ykjList
+            ykrjList.append(yjList)
+        return ykrjList
 
     def _calc_bk(self):
         # Calculate the Time Congestion Probabilities = Call Blocking Probabilities
@@ -189,19 +189,19 @@ class SRM(object):
         return self._ykj
     
     def get_ykrj(self):
-        # Get ykj values
+        # Get ykrj values
         return self._ykrj
 
     def get_bk(self):
-        # Get call blocking probabilities
+        # Get blocking probabilities
         return self._bk
 
     def get_bkr(self):
-        # Get call blocking probabilities
+        # Get retry blocking probabilities
         return self._bkr
 
     def get_cbkr(self):
-        # Get call blocking probabilities
+        # Get conditional blocking probabilities
         return self._cbkr
     
     def get_u(self):
