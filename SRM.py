@@ -48,7 +48,7 @@ class SRM(object):
                     if (j - self._bList[i]) >= 0 and j <= self._c - self._tList[i]:
                         qj += self._aList[i] * self._bList[i] * qList[j - self._bList[i]]
                 for i in range(0, self._k):
-                    if (j - self._brList[i]) >= 0 and j <= self._c - self._tList[i] and j > self._c - (self._bList[i] - self._brList[i]):
+                    if self._arList[i]*self._bList[i] > 0 and (j - self._brList[i]) >= 0 and j <= self._c - self._tList[i] and j > self._c - (self._bList[i] - self._brList[i]):
                         qj += self._arList[i] * self._brList[i] * qList[j - self._brList[i]]
                 qj *= 1.0/j
             qList.append(qj)
@@ -105,14 +105,15 @@ class SRM(object):
         bkrList = []
         for i in range (0, self._k):
             br = 0
-            minj = self._c - self._brList[i] - self._tList[i] + 1
-            for j in range (minj, self._c + 1):
-                br += self._qNormList[j]
+            if self._arList[i]*self._brList[i] > 0:
+                minj = self._c - self._brList[i] - self._tList[i] + 1
+                for j in range (minj, self._c + 1):
+                    br += self._qNormList[j]
             bkrList.append(br)
         return bkrList
 
     def _calc_cbkr(self):
-        # Calculate the Time Congestion Probabilities = Call Blocking Probabilities
+        # Calculate the conditional blocking probabilities
         cbkrList = []
         for i in range (0, self._k):
             cbr = self._bkr[i] / self._bk[i]

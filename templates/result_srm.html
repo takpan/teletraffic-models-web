@@ -12,13 +12,13 @@
   		{% for value in results['bkr'] %}
 			<tr>
 			  <th scope="row">{{ loop.index0 + 1}}</th>
-			  {% if value != results['bk'][loop.index0] %}
+			  {% if value != results['bk'][loop.index0] and value > 0 %}
 			     <td>{{ '%.5G' %  value }}</td>
 			  {% else %}
 			     <td>-</td>
 			  {% endif %}
 			  <td>{{ '%.5G' %  results['bk'][loop.index0] }}</td>
-        {% if value != results['bk'][loop.index0] %}
+        {% if value != results['bk'][loop.index0] and value > 0 %}
            <td>{{ '%.5G' %  results['cbkr'][loop.index0] }}</td>
         {% else %}
            <td>-</td>
