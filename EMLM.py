@@ -60,7 +60,7 @@ class EMLM(object):
             yjList = []
             for j in range(0, self._c + 1):
                 y = 0
-                if (j - self._bList[i]) >= 0 and self._qList[j] > 0:
+                if (j - self._bList[i]) >= 0 and self._qList[j] > 0 and j <= self._c - self._tList[i]:
                     y = self._aList[i] * self._qList[j - self._bList[i]] / self._qList[j]
                 yjList.append(y)
             ykjList.append(yjList)

@@ -72,7 +72,7 @@ class STM(object):
             for j in range(0, self._c + 1):
                 y = 0
                 if (j - self._bList[i]) >= 0 and ((j >= 1 and j <= self._j0 + self._bList[i] and self._bcList[i] > 0) or (j >= 1 and j <= self._c and self._bcList[i] == 0)) and j <= self._c - self._tList[i]:
-                    y = self._acList[i] * self._qList[j - self._bcList[i]] / self._qList[j]
+                    y = self._aList[i] * self._qList[j - self._bList[i]] / self._qList[j]
                 yjList.append(y)
             ykjList.append(yjList)
         return ykjList
@@ -95,9 +95,10 @@ class STM(object):
         bkList = []
         for i in range (0, self._k):
             b = 0
-            minj = self._c - self._bList[i] - self._tList[i] + 1
-            for j in range (minj, self._c + 1):
-                b += self._qNormList[j]
+            if self._acList[i]*self._bcList[i] == 0:
+                minj = self._c - self._bList[i] - self._tList[i] + 1
+                for j in range (minj, self._c + 1):
+                    b += self._qNormList[j]
             bkList.append(b)
         return bkList
 
@@ -117,7 +118,10 @@ class STM(object):
         # Calculate the conditional blocking probabilities
         cbkcList = []
         for i in range (0, self._k):
-            cbc = self._bkc[i] / self._bk[i]
+            probjgJ = 0
+            for j in range(self._j0 + 1, self._c + 1):
+                probjgJ += self._qNormList[j]
+            cbc = self._bkc[i] / probjgJ
             cbkcList.append(cbc)
         return cbkcList
 
